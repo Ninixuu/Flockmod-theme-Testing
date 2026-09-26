@@ -458,6 +458,30 @@
 
 </div>
 
+<div class="themeModSubsectionTitle">
+    Colors
+</div>
+
+<div class="themeModSetting themeModNoDivider">
+
+    <div class="themeModSettingText">
+        <div class="themeModSettingName">
+            Accent Color
+        </div>
+
+        <div class="themeModSettingDescription">
+            Choose the accent color used by the Theme Mod menu.
+        </div>
+    </div>
+
+    <input
+        type="color"
+        id="themeModUIAccentColor"
+        value="#4f5156"
+    >
+
+</div>
+
                         </div>
 
                         <div class="themeModActions">
@@ -643,33 +667,6 @@
                 savedSpacing
             );
         }
-
-        const interfacePanel =
-            dialog.querySelector(
-                '[data-theme-panel="interface"]'
-        );
-
-        let scrollbarHideTimer;
-
-interfacePanel.addEventListener("scroll", () => {
-
-    interfacePanel.classList.remove(
-        "themeModScrollbarHidden"
-    );
-
-    clearTimeout(
-        scrollbarHideTimer
-    );
-
-    scrollbarHideTimer = setTimeout(() => {
-
-        interfacePanel.classList.add(
-            "themeModScrollbarHidden"
-        );
-
-    }, 800);
-
-});
 
         const radiusSlider =
             dialog.querySelector("#themeModUIRadius");
