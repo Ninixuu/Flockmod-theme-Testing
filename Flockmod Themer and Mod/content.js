@@ -1279,7 +1279,7 @@
         createModMenu();
     }
 
-    function initialize() {
+    function loadSavedCustomizations() {
         const savedState =
             localStorage.getItem(
                 "flockmodCustomizationsEnabled"
@@ -1299,13 +1299,15 @@
         applySavedFontSize();
         applySavedFontWeight();
         applySavedSpacing();
+    }
 
-        if (addModButton()) {
-            return;
-        }
+    function initialize() {
+        loadSavedCustomizations();
 
-        setTimeout(
-            initialize,
+        addModButton();
+
+        setInterval(
+            addModButton,
             500
         );
     }
