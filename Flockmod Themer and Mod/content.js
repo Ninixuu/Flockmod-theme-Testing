@@ -22,6 +22,29 @@
         }
     }
 
+    function applyFontWeightPreview(weight) {
+        if (weight === "medium") {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font-weight",
+                "500"
+            );
+        } else if (weight === "semibold") {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font-weight",
+                "600"
+            );
+        } else if (weight === "bold") {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font-weight",
+                "700"
+            );
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-custom-ui-font-weight"
+            );
+        }
+    }
+
     function applySavedFont() {
         const savedFont =
             localStorage.getItem("flockmodCustomUIFont") || "default";
@@ -50,6 +73,19 @@
         } else {
             document.documentElement.style.removeProperty(
                 "--flockmod-custom-ui-font-size"
+            );
+        }
+    }
+
+    function applySavedFontWeight() {
+        const savedFontWeight =
+            localStorage.getItem("flockmodCustomUIFontWeight") || "regular";
+
+        if (customizationsEnabled) {
+            applyFontWeightPreview(savedFontWeight);
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-custom-ui-font-weight"
             );
         }
     }
@@ -266,6 +302,27 @@
 
                             </div>
 
+                            <div class="themeModSetting themeModNoDivider">
+
+                                <div class="themeModSettingText">
+                                    <div class="themeModSettingName">
+                                        UI Font Weight
+                                    </div>
+
+                                    <div class="themeModSettingDescription">
+                                        Choose the weight used by the FlockMod interface.
+                                    </div>
+                                </div>
+
+                                <select id="themeModUIFontWeight" class="themeModSelect">
+                                    <option value="regular">Regular</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="semibold">Semibold</option>
+                                    <option value="bold">Bold</option>
+                                </select>
+
+                            </div>
+
                         </div>
 
                         <div class="themeModActions">
@@ -297,7 +354,8 @@
             <div class="dialogSize dsCorner sbBottomRight"></div>
         `;
 
-        const dialogContainer = document.querySelector("#dialogContainer");
+        const dialogContainer =
+            document.querySelector("#dialogContainer");
 
         if (!dialogContainer) {
             return null;
@@ -314,19 +372,25 @@
         setupCloseButton(dialog);
         setupSidebarNavigation(dialog);
 
-        const enabledToggle = dialog.querySelector("#themeModEnabled");
+        const enabledToggle =
+            dialog.querySelector("#themeModEnabled");
 
         const savedState =
-            localStorage.getItem("flockmodCustomizationsEnabled");
+            localStorage.getItem(
+                "flockmodCustomizationsEnabled"
+            );
 
         if (savedState !== null) {
-            customizationsEnabled = savedState === "true";
+            customizationsEnabled =
+                savedState === "true";
         }
 
-        enabledToggle.checked = customizationsEnabled;
+        enabledToggle.checked =
+            customizationsEnabled;
 
         enabledToggle.addEventListener("change", () => {
-            customizationsEnabled = enabledToggle.checked;
+            customizationsEnabled =
+                enabledToggle.checked;
 
             localStorage.setItem(
                 "flockmodCustomizationsEnabled",
@@ -341,6 +405,7 @@
             if (customizationsEnabled) {
                 applySavedFont();
                 applySavedFontSize();
+                applySavedFontWeight();
             } else {
                 document.documentElement.style.removeProperty(
                     "--flockmod-custom-ui-font"
@@ -349,6 +414,10 @@
                 document.documentElement.style.removeProperty(
                     "--flockmod-custom-ui-font-size"
                 );
+
+                document.documentElement.style.removeProperty(
+                    "--flockmod-custom-ui-font-weight"
+                );
             }
         });
 
@@ -356,11 +425,16 @@
             dialog.querySelector("#themeModUIFont");
 
         const savedFont =
-            localStorage.getItem("flockmodCustomUIFont") || "default";
+            localStorage.getItem("flockmodCustomUIFont") ||
+            "default";
 
-        fontSelect.value = savedFont;
+        fontSelect.value =
+            savedFont;
 
-        if (savedFont !== "default" && customizationsEnabled) {
+        if (
+            savedFont !== "default" &&
+            customizationsEnabled
+        ) {
             document.documentElement.style.setProperty(
                 "--flockmod-custom-ui-font",
                 `"${savedFont}", sans-serif`
@@ -371,16 +445,39 @@
             dialog.querySelector("#themeModUIFontSize");
 
         const savedFontSize =
-            localStorage.getItem("flockmodCustomUIFontSize") || "medium";
+            localStorage.getItem(
+                "flockmodCustomUIFontSize"
+            ) || "medium";
 
-        fontSizeSelect.value = savedFontSize;
+        fontSizeSelect.value =
+            savedFontSize;
 
         if (customizationsEnabled) {
-            applyFontSizePreview(savedFontSize);
+            applyFontSizePreview(
+                savedFontSize
+            );
+        }
+
+        const fontWeightSelect =
+            dialog.querySelector("#themeModUIFontWeight");
+
+        const savedFontWeight =
+            localStorage.getItem(
+                "flockmodCustomUIFontWeight"
+            ) || "regular";
+
+        fontWeightSelect.value =
+            savedFontWeight;
+
+        if (customizationsEnabled) {
+            applyFontWeightPreview(
+                savedFontWeight
+            );
         }
 
         fontSelect.addEventListener("change", () => {
-            const selectedFont = fontSelect.value;
+            const selectedFont =
+                fontSelect.value;
 
             if (selectedFont === "default") {
                 document.documentElement.style.removeProperty(
@@ -395,14 +492,26 @@
         });
 
         fontSizeSelect.addEventListener("change", () => {
-            applyFontSizePreview(fontSizeSelect.value);
+            applyFontSizePreview(
+                fontSizeSelect.value
+            );
+        });
+
+        fontWeightSelect.addEventListener("change", () => {
+            applyFontWeightPreview(
+                fontWeightSelect.value
+            );
         });
 
         const applyButton =
-            dialog.querySelector(".themeModApplyButton");
+            dialog.querySelector(
+                ".themeModApplyButton"
+            );
 
         const resetButton =
-            dialog.querySelector(".themeModResetButton");
+            dialog.querySelector(
+                ".themeModResetButton"
+            );
 
         applyButton.addEventListener("click", () => {
 
@@ -415,19 +524,35 @@
                 "flockmodCustomUIFontSize",
                 fontSizeSelect.value
             );
+
+            localStorage.setItem(
+                "flockmodCustomUIFontWeight",
+                fontWeightSelect.value
+            );
         });
 
         resetButton.addEventListener("click", () => {
 
-            fontSelect.value = "default";
+            fontSelect.value =
+                "default";
 
             document.documentElement.style.removeProperty(
                 "--flockmod-custom-ui-font"
             );
 
-            fontSizeSelect.value = "medium";
+            fontSizeSelect.value =
+                "medium";
 
-            applyFontSizePreview("medium");
+            applyFontSizePreview(
+                "medium"
+            );
+
+            fontWeightSelect.value =
+                "regular";
+
+            applyFontWeightPreview(
+                "regular"
+            );
 
             localStorage.setItem(
                 "flockmodCustomUIFont",
@@ -438,13 +563,21 @@
                 "flockmodCustomUIFontSize",
                 "medium"
             );
+
+            localStorage.setItem(
+                "flockmodCustomUIFontWeight",
+                "regular"
+            );
         });
 
         return dialog;
     }
 
     function setupDragging(dialog) {
-        const titleBar = dialog.querySelector(".dialogTitlebar");
+        const titleBar =
+            dialog.querySelector(
+                ".dialogTitlebar"
+            );
 
         let dragging = false;
         let startX = 0;
@@ -452,72 +585,135 @@
         let startLeft = 0;
         let startTop = 0;
 
-        titleBar.addEventListener("pointerdown", (event) => {
-            if (event.target.closest(".closeButton")) {
-                return;
+        titleBar.addEventListener(
+            "pointerdown",
+            (event) => {
+
+                if (
+                    event.target.closest(
+                        ".closeButton"
+                    )
+                ) {
+                    return;
+                }
+
+                dragging = true;
+
+                startX =
+                    event.clientX;
+
+                startY =
+                    event.clientY;
+
+                startLeft =
+                    dialog.offsetLeft;
+
+                startTop =
+                    dialog.offsetTop;
+
+                titleBar.setPointerCapture(
+                    event.pointerId
+                );
             }
+        );
 
-            dragging = true;
+        titleBar.addEventListener(
+            "pointermove",
+            (event) => {
 
-            startX = event.clientX;
-            startY = event.clientY;
-            startLeft = dialog.offsetLeft;
-            startTop = dialog.offsetTop;
+                if (!dragging) {
+                    return;
+                }
 
-            titleBar.setPointerCapture(event.pointerId);
-        });
+                const dx =
+                    event.clientX -
+                    startX;
 
-        titleBar.addEventListener("pointermove", (event) => {
-            if (!dragging) {
-                return;
+                const dy =
+                    event.clientY -
+                    startY;
+
+                let newLeft =
+                    startLeft + dx;
+
+                let newTop =
+                    startTop + dy;
+
+                const screenWidth =
+                    window.innerWidth;
+
+                const screenHeight =
+                    window.innerHeight;
+
+                const dialogWidth =
+                    dialog.offsetWidth;
+
+                const dialogHeight =
+                    dialog.offsetHeight;
+
+                const minLeft =
+                    0;
+
+                const maxLeft =
+                    screenWidth -
+                    dialogWidth;
+
+                const minTop =
+                    0;
+
+                const maxTop =
+                    screenHeight -
+                    dialogHeight;
+
+                newLeft =
+                    Math.max(
+                        minLeft,
+                        Math.min(
+                            newLeft,
+                            maxLeft
+                        )
+                    );
+
+                newTop =
+                    Math.max(
+                        minTop,
+                        Math.min(
+                            newTop,
+                            maxTop
+                        )
+                    );
+
+                dialog.style.left =
+                    `${newLeft}px`;
+
+                dialog.style.top =
+                    `${newTop}px`;
             }
+        );
 
-            const dx = event.clientX - startX;
-            const dy = event.clientY - startY;
+        titleBar.addEventListener(
+            "pointerup",
+            () => {
+                dragging = false;
+            }
+        );
 
-            let newLeft = startLeft + dx;
-            let newTop = startTop + dy;
-
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
-
-            const dialogWidth = dialog.offsetWidth;
-            const dialogHeight = dialog.offsetHeight;
-
-            const minLeft = 0;
-            const maxLeft = screenWidth - dialogWidth;
-
-            const minTop = 0;
-            const maxTop = screenHeight - dialogHeight;
-
-            newLeft = Math.max(
-                minLeft,
-                Math.min(newLeft, maxLeft)
-            );
-
-            newTop = Math.max(
-                minTop,
-                Math.min(newTop, maxTop)
-            );
-
-            dialog.style.left = `${newLeft}px`;
-            dialog.style.top = `${newTop}px`;
-        });
-
-        titleBar.addEventListener("pointerup", () => {
-            dragging = false;
-        });
-
-        titleBar.addEventListener("pointercancel", () => {
-            dragging = false;
-        });
+        titleBar.addEventListener(
+            "pointercancel",
+            () => {
+                dragging = false;
+            }
+        );
     }
 
     function setupResizing(dialog) {
         const minWidth = 400;
         const minHeight = 300;
 
-        function setupHandle(handle, direction) {
+        function setupHandle(
+            handle,
+            direction
+        ) {
             let resizing = false;
 
             let startX;
@@ -527,99 +723,189 @@
             let startLeft;
             let startTop;
 
-            handle.addEventListener("pointerdown", (event) => {
-                event.preventDefault();
+            handle.addEventListener(
+                "pointerdown",
+                (event) => {
 
-                resizing = true;
+                    event.preventDefault();
 
-                startX = event.clientX;
-                startY = event.clientY;
+                    resizing = true;
 
-                startWidth = dialog.offsetWidth;
-                startHeight = dialog.offsetHeight;
+                    startX =
+                        event.clientX;
 
-                startLeft = dialog.offsetLeft;
-                startTop = dialog.offsetTop;
+                    startY =
+                        event.clientY;
 
-                handle.setPointerCapture(event.pointerId);
-            });
+                    startWidth =
+                        dialog.offsetWidth;
 
-            handle.addEventListener("pointermove", (event) => {
-                if (!resizing) {
-                    return;
-                }
+                    startHeight =
+                        dialog.offsetHeight;
 
-                const dx = event.clientX - startX;
-                const dy = event.clientY - startY;
+                    startLeft =
+                        dialog.offsetLeft;
 
-                let width = startWidth;
-                let height = startHeight;
-                let left = startLeft;
-                let top = startTop;
+                    startTop =
+                        dialog.offsetTop;
 
-                if (direction.includes("right")) {
-                    width = Math.max(
-                        minWidth,
-                        startWidth + dx
+                    handle.setPointerCapture(
+                        event.pointerId
                     );
                 }
+            );
 
-                if (direction.includes("left")) {
-                    width = Math.max(
-                        minWidth,
-                        startWidth - dx
-                    );
+            handle.addEventListener(
+                "pointermove",
+                (event) => {
 
-                    if (width > minWidth) {
-                        left = startLeft + dx;
-                    } else {
-                        left =
-                            startLeft +
-                            (startWidth - minWidth);
+                    if (!resizing) {
+                        return;
+                    }
+
+                    const dx =
+                        event.clientX -
+                        startX;
+
+                    const dy =
+                        event.clientY -
+                        startY;
+
+                    let width =
+                        startWidth;
+
+                    let height =
+                        startHeight;
+
+                    let left =
+                        startLeft;
+
+                    let top =
+                        startTop;
+
+                    if (
+                        direction.includes(
+                            "right"
+                        )
+                    ) {
+                        width =
+                            Math.max(
+                                minWidth,
+                                startWidth +
+                                dx
+                            );
+                    }
+
+                    if (
+                        direction.includes(
+                            "left"
+                        )
+                    ) {
+                        width =
+                            Math.max(
+                                minWidth,
+                                startWidth -
+                                dx
+                            );
+
+                        if (
+                            width >
+                            minWidth
+                        ) {
+                            left =
+                                startLeft +
+                                dx;
+                        } else {
+                            left =
+                                startLeft +
+                                (
+                                    startWidth -
+                                    minWidth
+                                );
+                        }
+                    }
+
+                    if (
+                        direction.includes(
+                            "bottom"
+                        )
+                    ) {
+                        height =
+                            Math.max(
+                                minHeight,
+                                startHeight +
+                                dy
+                            );
+                    }
+
+                    if (
+                        direction.includes(
+                            "top"
+                        )
+                    ) {
+                        height =
+                            Math.max(
+                                minHeight,
+                                startHeight -
+                                dy
+                            );
+
+                        if (
+                            height >
+                            minHeight
+                        ) {
+                            top =
+                                startTop +
+                                dy;
+                        } else {
+                            top =
+                                startTop +
+                                (
+                                    startHeight -
+                                    minHeight
+                                );
+                        }
+                    }
+
+                    dialog.style.width =
+                        `${width}px`;
+
+                    dialog.style.height =
+                        `${height}px`;
+
+                    if (
+                        direction.includes(
+                            "left"
+                        )
+                    ) {
+                        dialog.style.left =
+                            `${left}px`;
+                    }
+
+                    if (
+                        direction.includes(
+                            "top"
+                        )
+                    ) {
+                        dialog.style.top =
+                            `${top}px`;
                     }
                 }
+            );
 
-                if (direction.includes("bottom")) {
-                    height = Math.max(
-                        minHeight,
-                        startHeight + dy
-                    );
+            handle.addEventListener(
+                "pointerup",
+                () => {
+                    resizing = false;
                 }
+            );
 
-                if (direction.includes("top")) {
-                    height = Math.max(
-                        minHeight,
-                        startHeight - dy
-                    );
-
-                    if (height > minHeight) {
-                        top = startTop + dy;
-                    } else {
-                        top =
-                            startTop +
-                            (startHeight - minHeight);
-                    }
+            handle.addEventListener(
+                "pointercancel",
+                () => {
+                    resizing = false;
                 }
-
-                dialog.style.width = `${width}px`;
-                dialog.style.height = `${height}px`;
-
-                if (direction.includes("left")) {
-                    dialog.style.left = `${left}px`;
-                }
-
-                if (direction.includes("top")) {
-                    dialog.style.top = `${top}px`;
-                }
-            });
-
-            handle.addEventListener("pointerup", () => {
-                resizing = false;
-            });
-
-            handle.addEventListener("pointercancel", () => {
-                resizing = false;
-            });
+            );
         }
 
         setupHandle(
@@ -665,97 +951,158 @@
 
     function setupCloseButton(dialog) {
         const closeButton =
-            dialog.querySelector(".closeButton");
+            dialog.querySelector(
+                ".closeButton"
+            );
 
-        closeButton.addEventListener("click", (event) => {
-            event.preventDefault();
+        closeButton.addEventListener(
+            "click",
+            (event) => {
 
-            const savedFont =
-                localStorage.getItem("flockmodCustomUIFont") ||
-                "default";
+                event.preventDefault();
 
-            const savedFontSize =
-                localStorage.getItem("flockmodCustomUIFontSize") ||
-                "medium";
+                const savedFont =
+                    localStorage.getItem(
+                        "flockmodCustomUIFont"
+                    ) || "default";
 
-            if (savedFont === "default") {
-                document.documentElement.style.removeProperty(
-                    "--flockmod-custom-ui-font"
+                const savedFontSize =
+                    localStorage.getItem(
+                        "flockmodCustomUIFontSize"
+                    ) || "medium";
+
+                const savedFontWeight =
+                    localStorage.getItem(
+                        "flockmodCustomUIFontWeight"
+                    ) || "regular";
+
+                if (
+                    savedFont ===
+                    "default"
+                ) {
+                    document.documentElement.style.removeProperty(
+                        "--flockmod-custom-ui-font"
+                    );
+                } else {
+                    document.documentElement.style.setProperty(
+                        "--flockmod-custom-ui-font",
+                        `"${savedFont}", sans-serif`
+                    );
+                }
+
+                applyFontSizePreview(
+                    savedFontSize
                 );
-            } else {
-                document.documentElement.style.setProperty(
-                    "--flockmod-custom-ui-font",
-                    `"${savedFont}", sans-serif`
+
+                applyFontWeightPreview(
+                    savedFontWeight
                 );
+
+                const backdrop =
+                    document.querySelector(
+                        ".themeModBackdrop"
+                    );
+
+                if (backdrop) {
+                    backdrop.remove();
+                }
+
+                dialog.remove();
             }
-
-            applyFontSizePreview(savedFontSize);
-
-            const backdrop =
-                document.querySelector(".themeModBackdrop");
-
-            if (backdrop) {
-                backdrop.remove();
-            }
-
-            dialog.remove();
-        });
+        );
     }
 
     function setupSidebarNavigation(dialog) {
         const sidebarButtons =
-            dialog.querySelectorAll(".themeModSidebarItem");
+            dialog.querySelectorAll(
+                ".themeModSidebarItem"
+            );
 
         const sectionTitle =
-            dialog.querySelector(".themeModSectionTitle");
+            dialog.querySelector(
+                ".themeModSectionTitle"
+            );
 
         const sectionPanels =
-            dialog.querySelectorAll(".themeModSectionContent");
+            dialog.querySelectorAll(
+                ".themeModSectionContent"
+            );
 
         const actions =
-            dialog.querySelector(".themeModActions");
+            dialog.querySelector(
+                ".themeModActions"
+            );
 
-        actions.style.display = "none";
+        actions.style.display =
+            "none";
 
-        sidebarButtons.forEach((button) => {
-            button.addEventListener("click", () => {
+        sidebarButtons.forEach(
+            (button) => {
 
-                sidebarButtons.forEach((item) => {
-                    item.classList.remove("active");
-                });
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                button.classList.add("active");
+                        sidebarButtons.forEach(
+                            (item) => {
+                                item.classList.remove(
+                                    "active"
+                                );
+                            }
+                        );
 
-                const sectionName =
-                    button.dataset.themeSection;
+                        button.classList.add(
+                            "active"
+                        );
 
-                sectionTitle.textContent =
-                    sectionName.charAt(0).toUpperCase() +
-                    sectionName.slice(1);
+                        const sectionName =
+                            button.dataset
+                                .themeSection;
 
-                sectionPanels.forEach((panel) => {
-                    if (
-                        panel.dataset.themePanel ===
-                        sectionName
-                    ) {
-                        panel.style.display = "block";
-                    } else {
-                        panel.style.display = "none";
+                        sectionTitle.textContent =
+                            sectionName
+                                .charAt(0)
+                                .toUpperCase() +
+                            sectionName.slice(1);
+
+                        sectionPanels.forEach(
+                            (panel) => {
+
+                                if (
+                                    panel.dataset
+                                        .themePanel ===
+                                    sectionName
+                                ) {
+                                    panel.style.display =
+                                        "block";
+                                } else {
+                                    panel.style.display =
+                                        "none";
+                                }
+                            }
+                        );
+
+                        if (
+                            sectionName ===
+                            "interface"
+                        ) {
+                            actions.style.display =
+                                "flex";
+                        } else {
+                            actions.style.display =
+                                "none";
+                        }
                     }
-                });
-
-                if (sectionName === "interface") {
-                    actions.style.display = "flex";
-                } else {
-                    actions.style.display = "none";
-                }
-            });
-        });
+                );
+            }
+        );
     }
 
     function toggleModMenu() {
         const existingMenu =
-            document.querySelector(MOD_DIALOG_SELECTOR);
+            document.querySelector(
+                MOD_DIALOG_SELECTOR
+            );
 
         if (existingMenu) {
             existingMenu.remove();
@@ -783,12 +1130,16 @@
 
         applySavedFont();
         applySavedFontSize();
+        applySavedFontWeight();
 
         if (addModButton()) {
             return;
         }
 
-        setTimeout(initialize, 500);
+        setTimeout(
+            initialize,
+            500
+        );
     }
 
     initialize();

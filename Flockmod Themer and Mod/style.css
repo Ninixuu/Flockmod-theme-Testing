@@ -455,3 +455,42 @@ html:not(.flockmodCustomizationsDisabled) .nameBox,
 html:not(.flockmodCustomizationsDisabled) .typeBox {
     font-size: calc(11.52px * var(--flockmod-custom-ui-font-size, 1)) !important;
 }
+
+/* =========================================================
+   FLOCKMOD UI FONT WEIGHT
+   ========================================================= */
+
+html:not(.flockmodCustomizationsDisabled) .optionTitle,
+html:not(.flockmodCustomizationsDisabled) .containerTitle {
+    font-weight: var(--flockmod-custom-ui-font-weight, 400) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .headerCaption {
+    font-weight: var(--flockmod-custom-ui-font-weight, 400) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .optionField {
+    font-weight: var(--flockmod-custom-ui-font-weight, 400) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) #sidebar select {
+    font-weight: var(--flockmod-custom-ui-font-weight, 400) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) #sidebar .btn span {
+    font-weight: var(--flockmod-custom-ui-font-weight, 400) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .nameBox,
+html:not(.flockmodCustomizationsDisabled) .typeBox {
+    font-weight: var(--flockmod-custom-ui-font-weight, 400) !important;
+}
+
+/* =========================================================
+   FLOCKMOD CHECKBOX NATIVE SIZE
+   ========================================================= */
+
+html:not(.flockmodCustomizationsDisabled) .fmCheckbox,
+html:not(.flockmodCustomizationsDisabled) .fmCheckbox > div {
+    font-size: 16px !important;
+}
