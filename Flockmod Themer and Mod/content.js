@@ -65,6 +65,25 @@
         }
     }
 
+    function applyRadiusPreview(radius) {
+    const numericRadius = Number(radius);
+
+        if (
+         Number.isFinite(numericRadius) &&
+         numericRadius >= 0 &&
+         numericRadius <= 12
+        ) {
+            document.documentElement.style.setProperty(
+             "--flockmod-ui-radius",
+             `${numericRadius}px`
+            );
+        } else {
+            document.documentElement.style.removeProperty(
+             "--flockmod-ui-radius"
+            );
+        }
+    }
+
     function applySavedFont() {
         const savedFont =
             localStorage.getItem("flockmodCustomUIFont") || "default";
@@ -370,41 +389,74 @@
                             </div>
 
                             <div class="themeModSubsectionTitle themeModSpacingSubsection">
-                                Spacing
-                            </div>
+    Spacing
+</div>
 
-                            <div class="themeModSetting themeModNoDivider">
+<div class="themeModSetting">
 
-                                <div class="themeModSettingText">
-                                    <div class="themeModSettingName">
-                                        UI Spacing
-                                    </div>
+    <div class="themeModSettingText">
+        <div class="themeModSettingName">
+            UI Spacing
+        </div>
 
-                                    <div class="themeModSettingDescription">
-                                        Adjust the spacing and density of the FlockMod interface.
-                                    </div>
-                                </div>
+        <div class="themeModSettingDescription">
+            Adjust the spacing and density of the FlockMod interface.
+        </div>
+    </div>
 
-                                <div class="themeModRangeControl">
-                                    <input
-                                        type="range"
-                                        id="themeModUISpacing"
-                                        class="themeModRange"
-                                        min="75"
-                                        max="125"
-                                        step="1"
-                                        value="100"
-                                    >
+    <div class="themeModRangeControl">
+        <input
+            type="range"
+            id="themeModUISpacing"
+            class="themeModRange"
+            min="75"
+            max="125"
+            step="1"
+            value="100"
+        >
 
-                                    <span
-                                        id="themeModUISpacingValue"
-                                        class="themeModRangeValue"
-                                    >
-                                        100%
-                                    </span>
-                                </div>
+        <span
+            id="themeModUISpacingValue"
+            class="themeModRangeValue"
+        >
+            100%
+        </span>
+    </div>
 
-                            </div>
+</div>
+
+<div class="themeModSetting themeModNoDivider">
+
+    <div class="themeModSettingText">
+        <div class="themeModSettingName">
+            Border Radius
+        </div>
+
+        <div class="themeModSettingDescription">
+            Adjust the roundness of FlockMod interface elements.
+        </div>
+    </div>
+
+    <div class="themeModRangeControl">
+        <input
+            type="range"
+            id="themeModUIRadius"
+            class="themeModRange"
+            min="0"
+            max="12"
+            step="1"
+            value="5"
+        >
+
+        <span
+            id="themeModUIRadiusValue"
+            class="themeModRangeValue"
+        >
+            5px
+        </span>
+    </div>
+
+</div>
 
                         </div>
 
@@ -592,6 +644,56 @@
             );
         }
 
+        const interfacePanel =
+            dialog.querySelector(
+                '[data-theme-panel="interface"]'
+        );
+
+        let scrollbarHideTimer;
+
+interfacePanel.addEventListener("scroll", () => {
+
+    interfacePanel.classList.remove(
+        "themeModScrollbarHidden"
+    );
+
+    clearTimeout(
+        scrollbarHideTimer
+    );
+
+    scrollbarHideTimer = setTimeout(() => {
+
+        interfacePanel.classList.add(
+            "themeModScrollbarHidden"
+        );
+
+    }, 800);
+
+});
+
+        const radiusSlider =
+            dialog.querySelector("#themeModUIRadius");
+
+        const radiusValue =
+            dialog.querySelector("#themeModUIRadiusValue");
+
+        const savedRadius =
+             localStorage.getItem(
+                "flockmodCustomUIRadius"
+        ) || "5";
+
+radiusSlider.value =
+    savedRadius;
+
+radiusValue.textContent =
+    `${savedRadius}px`;
+
+if (customizationsEnabled) {
+    applyRadiusPreview(
+        savedRadius
+    );
+}
+
         fontSelect.addEventListener("change", () => {
             const selectedFont =
                 fontSelect.value;
@@ -638,6 +740,18 @@
             );
         });
 
+        radiusSlider.addEventListener("input", () => {
+            const selectedRadius =
+                Number(radiusSlider.value);
+
+            radiusValue.textContent =
+                `${selectedRadius}px`;
+
+            applyRadiusPreview(
+                selectedRadius
+            );
+        });
+
         const applyButton =
             dialog.querySelector(
                 ".themeModApplyButton"
@@ -668,6 +782,11 @@
             localStorage.setItem(
                 "flockmodCustomUISpacing",
                 spacingSlider.value
+            );
+
+            localStorage.setItem(
+                "flockmodCustomUIRadius",
+                radiusSlider.value
             );
         });
 
@@ -707,6 +826,16 @@
                 "100"
             );
 
+            radiusSlider.value =
+                "5";
+
+            radiusValue.textContent =
+                "5px";
+
+            applyRadiusPreview(
+                "5"
+            );
+
             localStorage.setItem(
                 "flockmodCustomUIFont",
                 "default"
@@ -725,6 +854,11 @@
             localStorage.setItem(
                 "flockmodCustomUISpacing",
                 "100"
+            );
+
+            localStorage.setItem(
+                "flockmodCustomUIRadius",
+                "5"
             );
         });
 
@@ -1138,7 +1272,12 @@
                     localStorage.getItem(
                         "flockmodCustomUISpacing"
                     ) || "100";
-
+                    
+                    const savedRadius =
+                    localStorage.getItem(
+                        "flockmodCustomUIRadius"
+                    ) || "5";
+            
                 if (
                     savedFont ===
                     "default"
@@ -1173,6 +1312,10 @@
                 if (backdrop) {
                     backdrop.remove();
                 }
+
+                applyRadiusPreview(
+                    savedRadius
+                );
 
                 dialog.remove();
             }

@@ -195,12 +195,15 @@
     min-height: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-right: 8px;
 }
 
 .themeModSidebarFill {
     flex: 1;
     background-color: #242529;
 }
+
+
 
 
 /* =========================================================
@@ -553,6 +556,10 @@ html:not(.flockmodCustomizationsDisabled) .optionTitle {
 
 html:not(.flockmodCustomizationsDisabled) .layerButton {
     padding: calc(10px * var(--flockmod-ui-spacing, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .layerButton {
+    border-radius: var(--flockmod-ui-radius, 5px) !important;
 }
 
 
