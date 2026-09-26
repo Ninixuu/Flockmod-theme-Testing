@@ -5,15 +5,16 @@
     const MOD_DIALOG_SELECTOR = '.dialog[name="themeModMenu"]';
 
     function applyFontSizePreview(size) {
-        if (size === "small") {
+        const numericSize = Number(size);
+
+        if (
+            Number.isFinite(numericSize) &&
+            numericSize >= 90 &&
+            numericSize <= 110
+        ) {
             document.documentElement.style.setProperty(
                 "--flockmod-custom-ui-font-size",
-                "0.95"
-            );
-        } else if (size === "large") {
-            document.documentElement.style.setProperty(
-                "--flockmod-custom-ui-font-size",
-                "1.05"
+                String(numericSize / 100)
             );
         } else {
             document.documentElement.style.removeProperty(
@@ -45,6 +46,25 @@
         }
     }
 
+    function applySpacingPreview(spacing) {
+        const numericSpacing = Number(spacing);
+
+        if (
+            Number.isFinite(numericSpacing) &&
+            numericSpacing >= 75 &&
+            numericSpacing <= 125
+        ) {
+            document.documentElement.style.setProperty(
+                "--flockmod-ui-spacing",
+                String(numericSpacing / 100)
+            );
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-ui-spacing"
+            );
+        }
+    }
+
     function applySavedFont() {
         const savedFont =
             localStorage.getItem("flockmodCustomUIFont") || "default";
@@ -66,7 +86,7 @@
 
     function applySavedFontSize() {
         const savedFontSize =
-            localStorage.getItem("flockmodCustomUIFontSize") || "medium";
+            localStorage.getItem("flockmodCustomUIFontSize") || "100";
 
         if (customizationsEnabled) {
             applyFontSizePreview(savedFontSize);
@@ -86,6 +106,19 @@
         } else {
             document.documentElement.style.removeProperty(
                 "--flockmod-custom-ui-font-weight"
+            );
+        }
+    }
+
+    function applySavedSpacing() {
+        const savedSpacing =
+            localStorage.getItem("flockmodCustomUISpacing") || "100";
+
+        if (customizationsEnabled) {
+            applySpacingPreview(savedSpacing);
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-ui-spacing"
             );
         }
     }
@@ -290,15 +323,28 @@
                                     </div>
 
                                     <div class="themeModSettingDescription">
-                                        Choose the size used by the FlockMod interface.
+                                        Adjust the size used by the FlockMod interface.
                                     </div>
                                 </div>
 
-                                <select id="themeModUIFontSize" class="themeModSelect">
-                                    <option value="small">Small</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="large">Large</option>
-                                </select>
+                                <div class="themeModRangeControl">
+                                    <input
+                                        type="range"
+                                        id="themeModUIFontSize"
+                                        class="themeModRange"
+                                        min="90"
+                                        max="110"
+                                        step="1"
+                                        value="100"
+                                    >
+
+                                    <span
+                                        id="themeModUIFontSizeValue"
+                                        class="themeModRangeValue"
+                                    >
+                                        100%
+                                    </span>
+                                </div>
 
                             </div>
 
@@ -320,6 +366,43 @@
                                     <option value="semibold">Semibold</option>
                                     <option value="bold">Bold</option>
                                 </select>
+
+                            </div>
+
+                            <div class="themeModSubsectionTitle themeModSpacingSubsection">
+                                Spacing
+                            </div>
+
+                            <div class="themeModSetting themeModNoDivider">
+
+                                <div class="themeModSettingText">
+                                    <div class="themeModSettingName">
+                                        UI Spacing
+                                    </div>
+
+                                    <div class="themeModSettingDescription">
+                                        Adjust the spacing and density of the FlockMod interface.
+                                    </div>
+                                </div>
+
+                                <div class="themeModRangeControl">
+                                    <input
+                                        type="range"
+                                        id="themeModUISpacing"
+                                        class="themeModRange"
+                                        min="75"
+                                        max="125"
+                                        step="1"
+                                        value="100"
+                                    >
+
+                                    <span
+                                        id="themeModUISpacingValue"
+                                        class="themeModRangeValue"
+                                    >
+                                        100%
+                                    </span>
+                                </div>
 
                             </div>
 
@@ -406,6 +489,7 @@
                 applySavedFont();
                 applySavedFontSize();
                 applySavedFontWeight();
+                applySavedSpacing();
             } else {
                 document.documentElement.style.removeProperty(
                     "--flockmod-custom-ui-font"
@@ -417,6 +501,10 @@
 
                 document.documentElement.style.removeProperty(
                     "--flockmod-custom-ui-font-weight"
+                );
+
+                document.documentElement.style.removeProperty(
+                    "--flockmod-ui-spacing"
                 );
             }
         });
@@ -441,16 +529,22 @@
             );
         }
 
-        const fontSizeSelect =
+        const fontSizeSlider =
             dialog.querySelector("#themeModUIFontSize");
+
+        const fontSizeValue =
+            dialog.querySelector("#themeModUIFontSizeValue");
 
         const savedFontSize =
             localStorage.getItem(
                 "flockmodCustomUIFontSize"
-            ) || "medium";
+            ) || "100";
 
-        fontSizeSelect.value =
+        fontSizeSlider.value =
             savedFontSize;
+
+        fontSizeValue.textContent =
+            `${savedFontSize}%`;
 
         if (customizationsEnabled) {
             applyFontSizePreview(
@@ -475,6 +569,29 @@
             );
         }
 
+        const spacingSlider =
+            dialog.querySelector("#themeModUISpacing");
+
+        const spacingValue =
+            dialog.querySelector("#themeModUISpacingValue");
+
+        const savedSpacing =
+            localStorage.getItem(
+                "flockmodCustomUISpacing"
+            ) || "100";
+
+        spacingSlider.value =
+            savedSpacing;
+
+        spacingValue.textContent =
+            `${savedSpacing}%`;
+
+        if (customizationsEnabled) {
+            applySpacingPreview(
+                savedSpacing
+            );
+        }
+
         fontSelect.addEventListener("change", () => {
             const selectedFont =
                 fontSelect.value;
@@ -491,15 +608,33 @@
             }
         });
 
-        fontSizeSelect.addEventListener("change", () => {
+        fontSizeSlider.addEventListener("input", () => {
+            const selectedSize =
+                Number(fontSizeSlider.value);
+
+            fontSizeValue.textContent =
+                `${selectedSize}%`;
+
             applyFontSizePreview(
-                fontSizeSelect.value
+                selectedSize
             );
         });
 
         fontWeightSelect.addEventListener("change", () => {
             applyFontWeightPreview(
                 fontWeightSelect.value
+            );
+        });
+
+        spacingSlider.addEventListener("input", () => {
+            const selectedSpacing =
+                Number(spacingSlider.value);
+
+            spacingValue.textContent =
+                `${selectedSpacing}%`;
+
+            applySpacingPreview(
+                selectedSpacing
             );
         });
 
@@ -522,12 +657,17 @@
 
             localStorage.setItem(
                 "flockmodCustomUIFontSize",
-                fontSizeSelect.value
+                fontSizeSlider.value
             );
 
             localStorage.setItem(
                 "flockmodCustomUIFontWeight",
                 fontWeightSelect.value
+            );
+
+            localStorage.setItem(
+                "flockmodCustomUISpacing",
+                spacingSlider.value
             );
         });
 
@@ -540,11 +680,14 @@
                 "--flockmod-custom-ui-font"
             );
 
-            fontSizeSelect.value =
-                "medium";
+            fontSizeSlider.value =
+                "100";
+
+            fontSizeValue.textContent =
+                "100%";
 
             applyFontSizePreview(
-                "medium"
+                "100"
             );
 
             fontWeightSelect.value =
@@ -554,6 +697,16 @@
                 "regular"
             );
 
+            spacingSlider.value =
+                "100";
+
+            spacingValue.textContent =
+                "100%";
+
+            applySpacingPreview(
+                "100"
+            );
+
             localStorage.setItem(
                 "flockmodCustomUIFont",
                 "default"
@@ -561,12 +714,17 @@
 
             localStorage.setItem(
                 "flockmodCustomUIFontSize",
-                "medium"
+                "100"
             );
 
             localStorage.setItem(
                 "flockmodCustomUIFontWeight",
                 "regular"
+            );
+
+            localStorage.setItem(
+                "flockmodCustomUISpacing",
+                "100"
             );
         });
 
@@ -969,12 +1127,17 @@
                 const savedFontSize =
                     localStorage.getItem(
                         "flockmodCustomUIFontSize"
-                    ) || "medium";
+                    ) || "100";
 
                 const savedFontWeight =
                     localStorage.getItem(
                         "flockmodCustomUIFontWeight"
                     ) || "regular";
+
+                const savedSpacing =
+                    localStorage.getItem(
+                        "flockmodCustomUISpacing"
+                    ) || "100";
 
                 if (
                     savedFont ===
@@ -996,6 +1159,10 @@
 
                 applyFontWeightPreview(
                     savedFontWeight
+                );
+
+                applySpacingPreview(
+                    savedSpacing
                 );
 
                 const backdrop =
@@ -1131,6 +1298,7 @@
         applySavedFont();
         applySavedFontSize();
         applySavedFontWeight();
+        applySavedSpacing();
 
         if (addModButton()) {
             return;
