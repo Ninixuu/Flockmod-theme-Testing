@@ -1,8 +1,58 @@
 (() => {
     let customizationsEnabled = true;
-    
+
     const MOD_BUTTON_SELECTOR = ".themeModMenuButton";
     const MOD_DIALOG_SELECTOR = '.dialog[name="themeModMenu"]';
+
+    function applyFontSizePreview(size) {
+        if (size === "small") {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font-size",
+                "0.95"
+            );
+        } else if (size === "large") {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font-size",
+                "1.05"
+            );
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-custom-ui-font-size"
+            );
+        }
+    }
+
+    function applySavedFont() {
+        const savedFont =
+            localStorage.getItem("flockmodCustomUIFont") || "default";
+
+        if (
+            savedFont !== "default" &&
+            customizationsEnabled
+        ) {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font",
+                `"${savedFont}", sans-serif`
+            );
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-custom-ui-font"
+            );
+        }
+    }
+
+    function applySavedFontSize() {
+        const savedFontSize =
+            localStorage.getItem("flockmodCustomUIFontSize") || "medium";
+
+        if (customizationsEnabled) {
+            applyFontSizePreview(savedFontSize);
+        } else {
+            document.documentElement.style.removeProperty(
+                "--flockmod-custom-ui-font-size"
+            );
+        }
+    }
 
     function addModButton() {
         const bottomBar = document.querySelector(
@@ -13,7 +63,6 @@
             return false;
         }
 
-        // Prevent duplicates
         if (bottomBar.querySelector(MOD_BUTTON_SELECTOR)) {
             return true;
         }
@@ -24,24 +73,26 @@
         const modButton = document.createElement("a");
         modButton.href = "#";
         modButton.className = "nav-link themeModMenuButton";
+
         modButton.innerHTML = `
-    <svg
-        viewBox="0 0 24 24"
-        width="16"
-        height="16"
-        aria-hidden="true"
-        style="fill: currentColor;"
-    >
-        <g transform="translate(12 12)">
-            <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8"/>
-            <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(72)"/>
-            <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(144)"/>
-            <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(216)"/>
-            <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(288)"/>
-            <circle cx="0" cy="0" r="2.5"/>
-        </g>
-    </svg>
-`;
+            <svg
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                aria-hidden="true"
+                style="fill: currentColor;"
+            >
+                <g transform="translate(12 12)">
+                    <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8"/>
+                    <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(72)"/>
+                    <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(144)"/>
+                    <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(216)"/>
+                    <ellipse cx="0" cy="-5.2" rx="4.1" ry="4.8" transform="rotate(288)"/>
+                    <circle cx="0" cy="0" r="2.5"/>
+                </g>
+            </svg>
+        `;
+
         modButton.title = "Theme Mod Menu";
 
         modButton.addEventListener("click", (event) => {
@@ -95,107 +146,145 @@
 
                 <div class="themeModContent">
 
-    <div class="themeModSidebar">
+                    <div class="themeModSidebar">
 
-        <button class="themeModSidebarItem active" data-theme-section="general">
-            General
-        </button>
+                        <button class="themeModSidebarItem active" data-theme-section="general">
+                            General
+                        </button>
 
-        <button class="themeModSidebarItem" data-theme-section="interface">
-            Interface
-        </button>
+                        <button class="themeModSidebarItem" data-theme-section="interface">
+                            Interface
+                        </button>
 
-        <button class="themeModSidebarItem" data-theme-section="colors">
-            Colors
-        </button>
+                        <button class="themeModSidebarItem" data-theme-section="colors">
+                            Colors
+                        </button>
 
-        <button class="themeModSidebarItem" data-theme-section="sidebar">
-            Sidebar
-        </button>
+                        <button class="themeModSidebarItem" data-theme-section="sidebar">
+                            Sidebar
+                        </button>
 
-        <button class="themeModSidebarItem" data-theme-section="animations">
-            Animations
-        </button>
+                        <button class="themeModSidebarItem" data-theme-section="animations">
+                            Animations
+                        </button>
 
-        <button class="themeModSidebarItem" data-theme-section="advanced">
-            Advanced
-        </button>
+                        <button class="themeModSidebarItem" data-theme-section="advanced">
+                            Advanced
+                        </button>
 
-        <div class="themeModSidebarFill"></div>
+                        <div class="themeModSidebarFill"></div>
 
-    </div>
+                    </div>
 
-    <div class="themeModPanel">
+                    <div class="themeModPanel">
 
-    <div class="themeModSectionTitle">
-        General
-    </div>
+                        <div class="themeModSectionTitle">
+                            General
+                        </div>
 
-    <div class="themeModSectionContent" data-theme-panel="general">
+                        <div class="themeModSectionContent" data-theme-panel="general">
 
-        <div class="themeModSetting">
+                            <div class="themeModSetting">
 
-            <div class="themeModSettingText">
-                <div class="themeModSettingName">
-                    Enable customizations
+                                <div class="themeModSettingText">
+                                    <div class="themeModSettingName">
+                                        Enable customizations
+                                    </div>
+
+                                    <div class="themeModSettingDescription">
+                                        Turn your FlockMod customizations on or off.
+                                    </div>
+                                </div>
+
+                                <label class="themeModToggle">
+
+                                    <input type="checkbox" id="themeModEnabled">
+
+                                    <span class="themeModToggleTrack">
+                                        <span class="themeModToggleOption themeModToggleOff">
+                                            OFF
+                                        </span>
+
+                                        <span class="themeModToggleOption themeModToggleOn">
+                                            ON
+                                        </span>
+
+                                        <span class="themeModToggleThumb"></span>
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                        <div class="themeModSectionContent" data-theme-panel="interface">
+
+                            <div class="themeModSubsectionTitle">
+                                Font
+                            </div>
+
+                            <div class="themeModSetting themeModNoDivider">
+
+                                <div class="themeModSettingText">
+                                    <div class="themeModSettingName">
+                                        UI Font
+                                    </div>
+
+                                    <div class="themeModSettingDescription">
+                                        Choose the font used by the FlockMod interface.
+                                    </div>
+                                </div>
+
+                                <select id="themeModUIFont" class="themeModSelect">
+                                    <option value="default">FlockMod default</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Trebuchet MS">Trebuchet MS</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+
+                            </div>
+
+                            <div class="themeModSetting themeModNoDivider">
+
+                                <div class="themeModSettingText">
+                                    <div class="themeModSettingName">
+                                        UI Font Size
+                                    </div>
+
+                                    <div class="themeModSettingDescription">
+                                        Choose the size used by the FlockMod interface.
+                                    </div>
+                                </div>
+
+                                <select id="themeModUIFontSize" class="themeModSelect">
+                                    <option value="small">Small</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="themeModActions">
+
+                            <button type="button" class="themeModResetButton">
+                                Reset
+                            </button>
+
+                            <button type="button" class="themeModApplyButton">
+                                Apply Changes
+                            </button>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div class="themeModSettingDescription">
-                    Turn your FlockMod customizations on or off.
-                </div>
             </div>
-
-            <label class="themeModToggle">
-
-    <input type="checkbox" id="themeModEnabled">
-
-    <span class="themeModToggleTrack">
-        <span class="themeModToggleOption themeModToggleOff">
-            OFF
-        </span>
-
-        <span class="themeModToggleOption themeModToggleOn">
-            ON
-        </span>
-
-        <span class="themeModToggleThumb"></span>
-    </span>
-
-</label>
-
-              </div>
-
-    </div>
-
-    <div class="themeModSectionContent" data-theme-panel="interface">
-
-        <div class="themeModSetting">
-
-            <div class="themeModSettingText">
-                <div class="themeModSettingName">
-                    UI Font
-                </div>
-
-                <div class="themeModSettingDescription">
-                    Choose the font used by the FlockMod interface.
-                </div>
-            </div>
-
-            <select id="themeModUIFont" class="themeModSelect">
-                <option value="default">FlockMod default</option>
-                <option value="Arial">Arial</option>
-                <option value="Verdana">Verdana</option>
-                <option value="Trebuchet MS">Trebuchet MS</option>
-                <option value="Georgia">Georgia</option>
-            </select>
-
-        </div>
-
-    </div>
-
-</div>
-
-</div>
 
             <div class="dialogSize dsBar sbTop"></div>
             <div class="dialogSize dsBar sbBottom"></div>
@@ -210,15 +299,15 @@
 
         const dialogContainer = document.querySelector("#dialogContainer");
 
-if (!dialogContainer) {
-    return null;
-}
+        if (!dialogContainer) {
+            return null;
+        }
 
-const backdrop = document.createElement("div");
-backdrop.className = "themeModBackdrop";
+        const backdrop = document.createElement("div");
+        backdrop.className = "themeModBackdrop";
 
-dialogContainer.appendChild(backdrop);
-dialogContainer.appendChild(dialog);
+        dialogContainer.appendChild(backdrop);
+        dialogContainer.appendChild(dialog);
 
         setupDragging(dialog);
         setupResizing(dialog);
@@ -227,55 +316,129 @@ dialogContainer.appendChild(dialog);
 
         const enabledToggle = dialog.querySelector("#themeModEnabled");
 
-        const savedState = localStorage.getItem("flockmodCustomizationsEnabled");
+        const savedState =
+            localStorage.getItem("flockmodCustomizationsEnabled");
 
-if (savedState !== null) {
-    customizationsEnabled = savedState === "true";
-}
+        if (savedState !== null) {
+            customizationsEnabled = savedState === "true";
+        }
 
         enabledToggle.checked = customizationsEnabled;
 
-enabledToggle.addEventListener("change", () => {
-    customizationsEnabled = enabledToggle.checked;
-    localStorage.setItem("flockmodCustomizationsEnabled", customizationsEnabled);
+        enabledToggle.addEventListener("change", () => {
+            customizationsEnabled = enabledToggle.checked;
 
-    document.documentElement.classList.toggle(
-        "flockmodCustomizationsDisabled",
-        !customizationsEnabled
-    );
-});
+            localStorage.setItem(
+                "flockmodCustomizationsEnabled",
+                customizationsEnabled
+            );
 
-const fontSelect = dialog.querySelector("#themeModUIFont");
+            document.documentElement.classList.toggle(
+                "flockmodCustomizationsDisabled",
+                !customizationsEnabled
+            );
 
-const savedFont = localStorage.getItem("flockmodCustomUIFont");
+            if (customizationsEnabled) {
+                applySavedFont();
+                applySavedFontSize();
+            } else {
+                document.documentElement.style.removeProperty(
+                    "--flockmod-custom-ui-font"
+                );
 
-if (savedFont !== null) {
-    fontSelect.value = savedFont;
-}
+                document.documentElement.style.removeProperty(
+                    "--flockmod-custom-ui-font-size"
+                );
+            }
+        });
 
-if (savedFont && savedFont !== "default" && customizationsEnabled) {
-    document.documentElement.style.setProperty(
-        "--flockmod-custom-ui-font",
-        `"${savedFont}", sans-serif`
-    );
-}
+        const fontSelect =
+            dialog.querySelector("#themeModUIFont");
 
-fontSelect.addEventListener("change", () => {
-    const selectedFont = fontSelect.value;
+        const savedFont =
+            localStorage.getItem("flockmodCustomUIFont") || "default";
 
-     localStorage.setItem("flockmodCustomUIFont", selectedFont);
+        fontSelect.value = savedFont;
 
-    if (selectedFont === "default") {
-        document.documentElement.style.removeProperty(
-            "--flockmod-custom-ui-font"
-        );
-    } else {
-        document.documentElement.style.setProperty(
-            "--flockmod-custom-ui-font",
-            `"${selectedFont}", sans-serif`
-        );
-    }
-});
+        if (savedFont !== "default" && customizationsEnabled) {
+            document.documentElement.style.setProperty(
+                "--flockmod-custom-ui-font",
+                `"${savedFont}", sans-serif`
+            );
+        }
+
+        const fontSizeSelect =
+            dialog.querySelector("#themeModUIFontSize");
+
+        const savedFontSize =
+            localStorage.getItem("flockmodCustomUIFontSize") || "medium";
+
+        fontSizeSelect.value = savedFontSize;
+
+        if (customizationsEnabled) {
+            applyFontSizePreview(savedFontSize);
+        }
+
+        fontSelect.addEventListener("change", () => {
+            const selectedFont = fontSelect.value;
+
+            if (selectedFont === "default") {
+                document.documentElement.style.removeProperty(
+                    "--flockmod-custom-ui-font"
+                );
+            } else {
+                document.documentElement.style.setProperty(
+                    "--flockmod-custom-ui-font",
+                    `"${selectedFont}", sans-serif`
+                );
+            }
+        });
+
+        fontSizeSelect.addEventListener("change", () => {
+            applyFontSizePreview(fontSizeSelect.value);
+        });
+
+        const applyButton =
+            dialog.querySelector(".themeModApplyButton");
+
+        const resetButton =
+            dialog.querySelector(".themeModResetButton");
+
+        applyButton.addEventListener("click", () => {
+
+            localStorage.setItem(
+                "flockmodCustomUIFont",
+                fontSelect.value
+            );
+
+            localStorage.setItem(
+                "flockmodCustomUIFontSize",
+                fontSizeSelect.value
+            );
+        });
+
+        resetButton.addEventListener("click", () => {
+
+            fontSelect.value = "default";
+
+            document.documentElement.style.removeProperty(
+                "--flockmod-custom-ui-font"
+            );
+
+            fontSizeSelect.value = "medium";
+
+            applyFontSizePreview("medium");
+
+            localStorage.setItem(
+                "flockmodCustomUIFont",
+                "default"
+            );
+
+            localStorage.setItem(
+                "flockmodCustomUIFontSize",
+                "medium"
+            );
+        });
 
         return dialog;
     }
@@ -305,35 +468,41 @@ fontSelect.addEventListener("change", () => {
         });
 
         titleBar.addEventListener("pointermove", (event) => {
-    if (!dragging) {
-        return;
-    }
+            if (!dragging) {
+                return;
+            }
 
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
+            const dx = event.clientX - startX;
+            const dy = event.clientY - startY;
 
-    let newLeft = startLeft + dx;
-    let newTop = startTop + dy;
+            let newLeft = startLeft + dx;
+            let newTop = startTop + dy;
 
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
 
-    const dialogWidth = dialog.offsetWidth;
-    const dialogHeight = dialog.offsetHeight;
+            const dialogWidth = dialog.offsetWidth;
+            const dialogHeight = dialog.offsetHeight;
 
-    // Keep the entire dialog inside the screen.
-    const minLeft = 0;
-    const maxLeft = screenWidth - dialogWidth;
+            const minLeft = 0;
+            const maxLeft = screenWidth - dialogWidth;
 
-    const minTop = 0;
-    const maxTop = screenHeight - dialogHeight;
+            const minTop = 0;
+            const maxTop = screenHeight - dialogHeight;
 
-    newLeft = Math.max(minLeft, Math.min(newLeft, maxLeft));
-    newTop = Math.max(minTop, Math.min(newTop, maxTop));
+            newLeft = Math.max(
+                minLeft,
+                Math.min(newLeft, maxLeft)
+            );
 
-    dialog.style.left = `${newLeft}px`;
-    dialog.style.top = `${newTop}px`;
-});
+            newTop = Math.max(
+                minTop,
+                Math.min(newTop, maxTop)
+            );
+
+            dialog.style.left = `${newLeft}px`;
+            dialog.style.top = `${newTop}px`;
+        });
 
         titleBar.addEventListener("pointerup", () => {
             dragging = false;
@@ -389,30 +558,46 @@ fontSelect.addEventListener("change", () => {
                 let top = startTop;
 
                 if (direction.includes("right")) {
-                    width = Math.max(minWidth, startWidth + dx);
+                    width = Math.max(
+                        minWidth,
+                        startWidth + dx
+                    );
                 }
 
                 if (direction.includes("left")) {
-                    width = Math.max(minWidth, startWidth - dx);
+                    width = Math.max(
+                        minWidth,
+                        startWidth - dx
+                    );
 
                     if (width > minWidth) {
                         left = startLeft + dx;
                     } else {
-                        left = startLeft + (startWidth - minWidth);
+                        left =
+                            startLeft +
+                            (startWidth - minWidth);
                     }
                 }
 
                 if (direction.includes("bottom")) {
-                    height = Math.max(minHeight, startHeight + dy);
+                    height = Math.max(
+                        minHeight,
+                        startHeight + dy
+                    );
                 }
 
                 if (direction.includes("top")) {
-                    height = Math.max(minHeight, startHeight - dy);
+                    height = Math.max(
+                        minHeight,
+                        startHeight - dy
+                    );
 
                     if (height > minHeight) {
                         top = startTop + dy;
                     } else {
-                        top = startTop + (startHeight - minHeight);
+                        top =
+                            startTop +
+                            (startHeight - minHeight);
                     }
                 }
 
@@ -437,64 +622,140 @@ fontSelect.addEventListener("change", () => {
             });
         }
 
-        setupHandle(dialog.querySelector(".sbTop"), "top");
-        setupHandle(dialog.querySelector(".sbBottom"), "bottom");
-        setupHandle(dialog.querySelector(".sbLeft"), "left");
-        setupHandle(dialog.querySelector(".sbRight"), "right");
+        setupHandle(
+            dialog.querySelector(".sbTop"),
+            "top"
+        );
 
-        setupHandle(dialog.querySelector(".sbTopLeft"), "top left");
-        setupHandle(dialog.querySelector(".sbTopRight"), "top right");
-        setupHandle(dialog.querySelector(".sbBottomLeft"), "bottom left");
-        setupHandle(dialog.querySelector(".sbBottomRight"), "bottom right");
+        setupHandle(
+            dialog.querySelector(".sbBottom"),
+            "bottom"
+        );
+
+        setupHandle(
+            dialog.querySelector(".sbLeft"),
+            "left"
+        );
+
+        setupHandle(
+            dialog.querySelector(".sbRight"),
+            "right"
+        );
+
+        setupHandle(
+            dialog.querySelector(".sbTopLeft"),
+            "top left"
+        );
+
+        setupHandle(
+            dialog.querySelector(".sbTopRight"),
+            "top right"
+        );
+
+        setupHandle(
+            dialog.querySelector(".sbBottomLeft"),
+            "bottom left"
+        );
+
+        setupHandle(
+            dialog.querySelector(".sbBottomRight"),
+            "bottom right"
+        );
     }
 
     function setupCloseButton(dialog) {
-        const closeButton = dialog.querySelector(".closeButton");
+        const closeButton =
+            dialog.querySelector(".closeButton");
 
         closeButton.addEventListener("click", (event) => {
-    event.preventDefault();
+            event.preventDefault();
 
-    const backdrop = document.querySelector(".themeModBackdrop");
+            const savedFont =
+                localStorage.getItem("flockmodCustomUIFont") ||
+                "default";
 
-    if (backdrop) {
-        backdrop.remove();
+            const savedFontSize =
+                localStorage.getItem("flockmodCustomUIFontSize") ||
+                "medium";
+
+            if (savedFont === "default") {
+                document.documentElement.style.removeProperty(
+                    "--flockmod-custom-ui-font"
+                );
+            } else {
+                document.documentElement.style.setProperty(
+                    "--flockmod-custom-ui-font",
+                    `"${savedFont}", sans-serif`
+                );
+            }
+
+            applyFontSizePreview(savedFontSize);
+
+            const backdrop =
+                document.querySelector(".themeModBackdrop");
+
+            if (backdrop) {
+                backdrop.remove();
+            }
+
+            dialog.remove();
+        });
     }
 
-    dialog.remove();
-});
-    }
     function setupSidebarNavigation(dialog) {
-    const sidebarButtons = dialog.querySelectorAll(".themeModSidebarItem");
-    const sectionTitle = dialog.querySelector(".themeModSectionTitle");
-    const sectionPanels = dialog.querySelectorAll(".themeModSectionContent");
+        const sidebarButtons =
+            dialog.querySelectorAll(".themeModSidebarItem");
 
-    sidebarButtons.forEach((button) => {
-        button.addEventListener("click", () => {
+        const sectionTitle =
+            dialog.querySelector(".themeModSectionTitle");
 
-            sidebarButtons.forEach((item) => {
-                item.classList.remove("active");
-            });
+        const sectionPanels =
+            dialog.querySelectorAll(".themeModSectionContent");
 
-            button.classList.add("active");
+        const actions =
+            dialog.querySelector(".themeModActions");
 
-            const sectionName = button.dataset.themeSection;
+        actions.style.display = "none";
 
-            sectionTitle.textContent =
-                sectionName.charAt(0).toUpperCase() + sectionName.slice(1);
+        sidebarButtons.forEach((button) => {
+            button.addEventListener("click", () => {
 
-            sectionPanels.forEach((panel) => {
-                if (panel.dataset.themePanel === sectionName) {
-                    panel.style.display = "block";
+                sidebarButtons.forEach((item) => {
+                    item.classList.remove("active");
+                });
+
+                button.classList.add("active");
+
+                const sectionName =
+                    button.dataset.themeSection;
+
+                sectionTitle.textContent =
+                    sectionName.charAt(0).toUpperCase() +
+                    sectionName.slice(1);
+
+                sectionPanels.forEach((panel) => {
+                    if (
+                        panel.dataset.themePanel ===
+                        sectionName
+                    ) {
+                        panel.style.display = "block";
+                    } else {
+                        panel.style.display = "none";
+                    }
+                });
+
+                if (sectionName === "interface") {
+                    actions.style.display = "flex";
                 } else {
-                    panel.style.display = "none";
+                    actions.style.display = "none";
                 }
             });
         });
-    });
-}
+    }
 
     function toggleModMenu() {
-        const existingMenu = document.querySelector(MOD_DIALOG_SELECTOR);
+        const existingMenu =
+            document.querySelector(MOD_DIALOG_SELECTOR);
 
         if (existingMenu) {
             existingMenu.remove();
@@ -504,34 +765,31 @@ fontSelect.addEventListener("change", () => {
         createModMenu();
     }
 
-    function applySavedFont() {
-    const savedFont = localStorage.getItem("flockmodCustomUIFont");
+    function initialize() {
+        const savedState =
+            localStorage.getItem(
+                "flockmodCustomizationsEnabled"
+            );
 
-    if (
-        savedFont &&
-        savedFont !== "default" &&
-        customizationsEnabled
-    ) {
-        document.documentElement.style.setProperty(
-            "--flockmod-custom-ui-font",
-            `"${savedFont}", sans-serif`
+        if (savedState !== null) {
+            customizationsEnabled =
+                savedState === "true";
+        }
+
+        document.documentElement.classList.toggle(
+            "flockmodCustomizationsDisabled",
+            !customizationsEnabled
         );
-    } else {
-        document.documentElement.style.removeProperty(
-            "--flockmod-custom-ui-font"
-        );
-    }
-}
 
-  function initialize() {
-    applySavedFont();
+        applySavedFont();
+        applySavedFontSize();
 
-    if (addModButton()) {
-        return;
+        if (addModButton()) {
+            return;
+        }
+
+        setTimeout(initialize, 500);
     }
 
-    setTimeout(initialize, 500);
-}
-
-initialize();
+    initialize();
 })();

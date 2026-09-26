@@ -151,19 +151,44 @@
 .themeModPanel {
     flex: 1;
     min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
     padding: 14px;
     background-color: #1d1e22;
     color: #fff;
 }
 
 .themeModSectionTitle {
-    font-size: .9rem;
+    font-size: 1rem;
     font-weight: 500;
     color: #fff;
 }
 
-.themeModSectionContent[data-theme-panel="interface"] {
+.themeModSubsectionTitle {
+    margin-top: 14px;
+    margin-bottom: 2px;
+    font-size: .85rem;
+    font-weight: 500;
+    color: #b4b6ba;
+    letter-spacing: .03rem;
+}
+
+.themeModSectionContent {
     display: none;
+    min-width: 0;
+}
+
+.themeModSectionContent[data-theme-panel="general"] {
+    display: block;
+}
+
+.themeModSectionContent[data-theme-panel="interface"] {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .themeModSidebarFill {
@@ -182,6 +207,10 @@
     gap: 20px;
     padding: 14px 0;
     border-bottom: 1px solid #36383d;
+}
+
+.themeModSetting.themeModNoDivider {
+    border-bottom: none;
 }
 
 .themeModSettingText {
@@ -327,4 +356,102 @@ html:not(.flockmodCustomizationsDisabled) .optiontitle {
 
 .themeModToggle input:checked + .themeModToggleTrack .themeModToggleOff {
     opacity: 0;
+}
+
+.themeModActions {
+    display: none;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin: 14px -14px -14px -14px;
+    padding: 10px 14px;
+    min-height: 44px;
+    background-color: #242529;
+    border-top: 1px solid #4f5156;
+}
+
+.themeModResetButton,
+.themeModApplyButton {
+    height: 30px;
+    min-width: 80px;
+    padding: 0 12px;
+
+    border: 1px solid #4f5156;
+    border-radius: 2px;
+
+    background-color: #303136;
+    color: #b4b6ba;
+
+    font-family: var(--flockmod-custom-ui-font, Rubik, sans-serif);
+    font-size: .75rem;
+    letter-spacing: .03rem;
+
+    cursor: pointer;
+    outline: none;
+
+    transition:
+        background-color .15s ease,
+        border-color .15s ease,
+        color .15s ease;
+}
+
+.themeModResetButton:hover,
+.themeModApplyButton:hover {
+    background-color: #3a3b40;
+    border-color: #707379;
+    color: #fff;
+}
+
+.themeModResetButton:active,
+.themeModApplyButton:active {
+    background-color: #28292d;
+}
+
+.themeModApplyButton {
+    background-color: #4f5156;
+    color: #fff;
+}
+
+.themeModApplyButton:hover {
+    background-color: #5c5e64;
+}
+
+/* =========================================================
+   FLOCKMOD UI FONT SIZE
+   ========================================================= */
+
+html:not(.flockmodCustomizationsDisabled) .optionTitle {
+    font-size: calc(11.2px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .containerTitle {
+    font-size: calc(11.2px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .headerCaption {
+    font-size: calc(12.8px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .sub-title {
+    font-size: calc(17.6px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .optionField {
+    font-size: calc(11.2px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) #sidebar select {
+    font-size: calc(11.2px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) #sidebar .btn span {
+    font-size: calc(10.24px * var(--flockmod-custom-ui-font-size, 1)) !important;
+}
+
+html:not(.flockmodCustomizationsDisabled) .nameBox,
+html:not(.flockmodCustomizationsDisabled) .typeBox {
+    font-size: calc(11.52px * var(--flockmod-custom-ui-font-size, 1)) !important;
 }
